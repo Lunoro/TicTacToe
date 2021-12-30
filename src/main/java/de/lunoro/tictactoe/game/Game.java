@@ -1,9 +1,11 @@
 package de.lunoro.tictactoe.game;
 
-import de.lunoro.tictactoe.game.tictactoe.TicTacToe;
+import de.lunoro.tictactoe.game.gameevents.GameEndEvent;
+import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
 import de.lunoro.tictactoe.game.gameinventory.GameInventory;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Game {
@@ -17,14 +19,15 @@ public class Game {
     @Getter
     @Setter
     private boolean isTurnOfPlayerOne;
+    @Getter
     private GamePhase gamePhase;
 
     public Game(Player playerOne, Player playerTwo) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.gamePhase = GamePhase.PENDING_INVITE;
-        this.gameInventory = new GameInventory(new TicTacToe(3), this);
         this.isTurnOfPlayerOne = true;
+        this.gameInventory = new GameInventory(new TicTacToeGame(3), this);
     }
 
     public void startGame() {
@@ -39,11 +42,25 @@ public class Game {
         playerTwo.openInventory(gameInventory.getInventory());
     }
 
+    public void stopGameWithoutWinner() {
+        fireEndGameEvent();
+        gamePhase = GamePhase.END;
+        playerOne.closeInventory();
+        playerTwo.closeInventory();
+    }
+
     public void stopGame() {
+        fireEndGameEvent();
+        gamePhase = GamePhase.END;
         playerOne.closeInventory();
         playerTwo.closeInventory();
         playerOne.sendMessage("The Game was won.");
         playerTwo.sendMessage("The Game was won.");
+    }
+
+    private void fireEndGameEvent() {
+        GameEndEvent gameEndEvent = new GameEndEvent(this);
+        Bukkit.getServer().getPluginManager().callEvent(gameEndEvent);
     }
 
     public void acceptInvite(Player playerTwo) {
@@ -52,11 +69,14 @@ public class Game {
         }
     }
 
-    public boolean isInvitedPlayer(Player player) {
-        return player.equals(playerTwo);
+    public Player getPlayerOnTurn() {
+        if (isTurnOfPlayerOne) {
+            return playerOne;
+        }
+        return playerTwo;
     }
 
-    public boolean isInactive() {
-        return gamePhase == GamePhase.PENDING_INVITE;
+    public boolean isInvitedPlayer(Player player) {
+        return player.equals(playerTwo);
     }
 }

@@ -23,10 +23,10 @@ public class GameContainer {
         deleteGameIfInvitationTimerIsExpired(game);
     }
 
-    public void deleteGameIfInvitationTimerIsExpired(Game game) {
+    private void deleteGameIfInvitationTimerIsExpired(Game game) {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (game.isInactive()) {
-                gameList.remove(game);
+            if (game.getGamePhase().equals(GamePhase.PENDING_INVITE)) {
+                removeGame(game);
             }
         }, 30 * 20);
     }

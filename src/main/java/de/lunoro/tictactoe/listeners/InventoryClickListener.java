@@ -3,7 +3,6 @@ package de.lunoro.tictactoe.listeners;
 import de.lunoro.tictactoe.game.Game;
 import de.lunoro.tictactoe.game.GameContainer;
 import de.lunoro.tictactoe.game.gameinventory.GameInventory;
-import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
 import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,15 +28,7 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        if (!game.isTurnOfPlayerOne() && player.equals(game.getPlayerTwo())) {
-            System.out.println("Player two clicked");
-            gameInventory.clickBlock(event, Mark.Y);
-        }
-
-        if (game.isTurnOfPlayerOne() && player.equals(game.getPlayerOne())) {
-            gameInventory.clickBlock(event, Mark.X);
-        }
-
+        gameInventory.clickBlock(event, player);
         event.setCancelled(true);
     }
 }

@@ -6,16 +6,16 @@ import lombok.Getter;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class TicTacToe {
+public class TicTacToeGame {
 
     @Getter
     private final Mark[][] gameBoard;
     @Getter
     private boolean isCompleted;
     private final int size;
-    private HashMap<Integer, String> boardMapping;
+    private final HashMap<Integer, String> boardMapping;
 
-    public TicTacToe(int size) {
+    public TicTacToeGame(int size) {
         this.size = size;
         this.gameBoard = new Mark[size][size];
         this.boardMapping = new HashMap<>();
@@ -38,23 +38,24 @@ public class TicTacToe {
         }
     }
 
-    public boolean markPos(int xPos, int yPos, Mark mark) {
+    public void markPos(int xPos, int yPos, Mark mark) {
         System.out.println(Arrays.deepToString(gameBoard));
         if (gameBoard[xPos][yPos] == null) {
             gameBoard[xPos][yPos] = mark;
-            return true;
+            getWinnerIfHas(xPos, yPos, mark);
         }
-        return false;
     }
 
-    public boolean markPos(int slot, Mark mark) {
-        String[] positions = boardMapping.get(slot).split(",");
-        return markPos(Integer.parseInt(positions[0]), Integer.parseInt(positions[1]), mark);
+    public void markPos(int index, Mark mark) {
+        String[] positions = boardMapping.get(index).split(",");
+        markPos(Integer.parseInt(positions[0]), Integer.parseInt(positions[1]), mark);
     }
 
-    public boolean positionIsValid(int slot) {
-        System.out.println(boardMapping);
-        String[] positions = boardMapping.get(slot).split(",");
+    public boolean positionIsValid(int index) {
+        if (boardMapping.get(index) == null) {
+            return false;
+        }
+        String[] positions = boardMapping.get(index).split(",");
         return gameBoard[Integer.parseInt(positions[0])][Integer.parseInt(positions[1])] == null;
     }
 
