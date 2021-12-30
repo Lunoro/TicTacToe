@@ -1,0 +1,42 @@
+package de.lunoro.tictactoe.commands;
+
+import de.lunoro.tictactoe.game.GameContainer;
+import lombok.AllArgsConstructor;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+@AllArgsConstructor
+public class InviteCommand implements CommandExecutor {
+
+    private final GameContainer gameContainer;
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        Player player = (Player) sender;
+        if (!player.hasPermission("tictactoe.invite")) {
+            player.sendMessage("You dont have enough permissions to do that.");
+            return false;
+        }
+        if (args.length != 1) {
+            player.sendMessage("Not enough arguments.");
+            return false;
+        }
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target == null) {
+            player.sendMessage("This player does not exist.");
+            return false;
+        }
+        if (gameContainer.getGame(player) != null) {
+            player.sendMessage("You cannot create a game while one is running.");
+            return false;
+        }
+
+        target.sendMessage("You were invited to a TicTacToe match. You have 30 seconds to accept the invite with /accept.");
+        gameContainer.createGame(player, target);
+        return true;
+    }
+}

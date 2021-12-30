@@ -1,0 +1,7 @@
+name: TicTacToe
+version: '${project.version}'
+main: de.lunoro.tictactoe.TicTacToe
+api-version: 1.18
+commands:
+  invite:
+  accept:
