@@ -15,7 +15,7 @@ public class InventoryCloseListener implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (!(event.getPlayer() instanceof Player)) {
+        if (!(event.getPlayer() instanceof Player player)) {
             return;
         }
 
@@ -23,7 +23,6 @@ public class InventoryCloseListener implements Listener {
             return;
         }
 
-        Player player = (Player) event.getPlayer();
         Game game = gameContainer.getGame(player);
 
         if (game == null) {

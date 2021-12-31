@@ -16,7 +16,10 @@ public class InviteCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Player player = (Player) sender;
+        if (!(sender instanceof Player player)) {
+            return false;
+        }
+
         if (!player.hasPermission("tictactoe.invite")) {
             player.sendMessage("You dont have enough permissions to do that.");
             return false;

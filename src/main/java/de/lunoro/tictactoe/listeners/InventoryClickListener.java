@@ -16,11 +16,10 @@ public class InventoryClickListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) {
+        if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
 
-        Player player = (Player) event.getWhoClicked();
         Game game = gameContainer.getGame(player);
         GameInventory gameInventory = game.getGameInventory();
 
