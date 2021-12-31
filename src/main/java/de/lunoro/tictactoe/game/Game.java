@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Random;
+
 public class Game {
 
     @Getter
@@ -29,9 +31,15 @@ public class Game {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.gamePhase = GamePhase.PENDING_INVITE;
-        this.isTurnOfPlayerOne = true;
+        this.isTurnOfPlayerOne = randomizeStart();
         this.ticTacToe = new TicTacToeGame(3);
         this.gameInventory = new GameInventory(ticTacToe, this);
+    }
+
+    private boolean randomizeStart() {
+        Random r = new Random();
+        int i = r.nextInt(0, 2);
+        return i == 0;
     }
 
     public void startGame() {

@@ -39,7 +39,7 @@ public class InviteCommand implements CommandExecutor {
             return false;
         }
 
-        target.sendMessage("You were invited from " + player.getName() + " to a TicTacToe match. You have 30 seconds to accept the invite with /accept [name of player].");
+        target.sendMessage("You were invited from " + player.getName() + " to a TicTacToe match. You have 30 seconds to accept the invite with /accept [" + player.getName() + "].");
         gameContainer.createGame(player, target);
         return true;
     }
