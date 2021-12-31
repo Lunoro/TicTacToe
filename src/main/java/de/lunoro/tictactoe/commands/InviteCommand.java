@@ -37,11 +37,17 @@ public class InviteCommand implements CommandExecutor {
             return false;
         }
 
+        if (target.equals(player)) {
+            player.sendMessage("You cannot invite yourself.");
+            return false;
+        }
+
         if (gameContainer.getGame(player) != null) {
             player.sendMessage("You cannot create a game while one is running.");
             return false;
         }
 
+        player.sendMessage("You've sent an invitation to " + target.getName() + ".");
         target.sendMessage("You were invited from " + player.getName() + " to a TicTacToe match. You have 30 seconds to accept the invite with /accept [" + player.getName() + "].");
         gameContainer.createGame(player, target);
         return true;

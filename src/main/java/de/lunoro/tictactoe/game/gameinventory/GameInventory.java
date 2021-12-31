@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -51,12 +52,15 @@ public class GameInventory {
             return;
         }
 
-        if (game.getPlayerOnTurn().equals(player)) {
-            ticTacToe.markPos(slot, mark);
-            fireMarkEvent(slot, player, mark);
-            updateWool(event.getInventory(), slot, mark);
-            updateTurnItem();
+        if (!game.getPlayerOnTurn().equals(player)) {
+            return;
         }
+
+        ticTacToe.markPos(slot, mark);
+        fireMarkEvent(slot, player, mark);
+        game.playSound(Sound.BLOCK_NOTE_BLOCK_BASS);
+        updateWool(event.getInventory(), slot, mark);
+        updateTurnItem();
     }
 
     private void updateWool(Inventory inventory, int slot, Mark mark) {
@@ -78,9 +82,9 @@ public class GameInventory {
     private void updateTurnItem() {
         ItemStack turnItem;
         if (game.isTurnOfPlayerOne()) {
-            turnItem = new ItemBuilder(Material.NETHER_STAR).setName(ChatColor.RED + "Turn of " + game.getPlayerOnTurn().getName()).toItemStack();
+            turnItem = new ItemBuilder(Material.NETHER_STAR).setName(ChatColor.RED + game.getPlayerOnTurn().getName() + "'s turn").toItemStack();
         } else {
-            turnItem = new ItemBuilder(Material.NETHER_STAR).setName(ChatColor.BLUE + "Turn of " + game.getPlayerOnTurn().getName()).toItemStack();
+            turnItem = new ItemBuilder(Material.NETHER_STAR).setName(ChatColor.BLUE + game.getPlayerOnTurn().getName() + "'s turn").toItemStack();
         }
         inventory.setItem(0, turnItem);
     }

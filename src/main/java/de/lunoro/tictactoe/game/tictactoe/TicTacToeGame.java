@@ -43,7 +43,7 @@ public class TicTacToeGame {
     public void markPos(int xPos, int yPos, Mark mark) {
         if (gameBoard[xPos][yPos] == null) {
             gameBoard[xPos][yPos] = mark;
-            winner = getWinnerIfHas(xPos, yPos, mark);
+            winner = getWinnerIfPresent(xPos, yPos, mark);
         }
     }
 
@@ -61,6 +61,9 @@ public class TicTacToeGame {
     }
 
     public boolean isDraw() {
+        if (winner != null) {
+            return false;
+        }
         for (Mark[] marks : gameBoard) {
             for (Mark mark : marks) {
                 if (mark == null) {
@@ -71,7 +74,7 @@ public class TicTacToeGame {
         return true;
     }
 
-    private Mark getWinnerIfHas(int xPos, int yPos, Mark mark) {
+    private Mark getWinnerIfPresent(int xPos, int yPos, Mark mark) {
         for (int i = 0; i < size; i++) {
             if (gameBoard[xPos][i] != mark) {
                 break;

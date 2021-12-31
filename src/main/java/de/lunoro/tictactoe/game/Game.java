@@ -7,24 +7,21 @@ import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Random;
 
+@Getter
 public class Game {
 
-    @Getter
     private final Player playerOne;
-    @Getter
     private final Player playerTwo;
-    @Getter
     private final GameInventory gameInventory;
-    @Getter
     @Setter
     private boolean isTurnOfPlayerOne;
-    @Getter
     private GamePhase gamePhase;
-    @Getter
     private final TicTacToeGame ticTacToe;
 
     public Game(Player playerOne, Player playerTwo) {
@@ -57,16 +54,12 @@ public class Game {
     public void stopGameWithoutWinner() {
         fireEndGameEvent();
         gamePhase = GamePhase.END;
-        playerOne.closeInventory();
-        playerTwo.closeInventory();
         sendMessage("Game was interrupted.");
     }
 
     public void stopGame() {
         fireEndGameEvent();
         gamePhase = GamePhase.END;
-        playerOne.closeInventory();
-        playerTwo.closeInventory();
         if (ticTacToe.isDraw()) {
             sendMessage("The game is a draw. GG");
         } else {
@@ -88,6 +81,11 @@ public class Game {
         if (this.playerTwo == playerTwo) {
             startGame();
         }
+    }
+
+    public void playSound(Sound sound) {
+        playerOne.playSound(playerOne.getLocation(), sound, 1f, 1f);
+        playerTwo.playSound(playerTwo.getLocation(), sound, 1f, 1f);
     }
 
     public Player getPlayerOnTurn() {

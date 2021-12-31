@@ -2,6 +2,7 @@ package de.lunoro.tictactoe.game.gameevents;
 
 import de.lunoro.tictactoe.game.Game;
 import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
@@ -10,16 +11,14 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
+@Getter
 public class MarkEvent extends Event {
 
-    @Getter
     private final int position;
-    @Getter
     private final Player player;
-    @Getter
     private final Mark mark;
-    @Getter
     private final Game game;
+    @Getter(value = AccessLevel.NONE)
     private static final HandlerList handlerList = new HandlerList();
 
     @Override

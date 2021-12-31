@@ -38,7 +38,7 @@ public final class TicTacToe extends JavaPlugin {
     private void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(gameContainer), this);
         Bukkit.getPluginManager().registerEvents(new InventoryCloseListener(gameContainer), this);
-        Bukkit.getPluginManager().registerEvents(new GameEndListener(gameContainer), this);
+        Bukkit.getPluginManager().registerEvents(new GameEndListener(gameContainer, this), this);
         Bukkit.getPluginManager().registerEvents(new MarkListener(), this);
     }
 

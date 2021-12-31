@@ -26,6 +26,11 @@ public class AcceptCommand implements CommandExecutor {
             return false;
         }
 
+        if (args.length != 1) {
+            player.sendMessage("Not enough arguments.");
+            return false;
+        }
+
         Player target = Bukkit.getPlayer(args[0]);
 
         if (target == null) {
