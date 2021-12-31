@@ -21,21 +21,25 @@ public class InviteCommand implements CommandExecutor {
             player.sendMessage("You dont have enough permissions to do that.");
             return false;
         }
+
         if (args.length != 1) {
             player.sendMessage("Not enough arguments.");
             return false;
         }
+
         Player target = Bukkit.getPlayer(args[0]);
+
         if (target == null) {
             player.sendMessage("This player does not exist.");
             return false;
         }
+
         if (gameContainer.getGame(player) != null) {
             player.sendMessage("You cannot create a game while one is running.");
             return false;
         }
 
-        target.sendMessage("You were invited to a TicTacToe match. You have 30 seconds to accept the invite with /accept.");
+        target.sendMessage("You were invited from " + player.getName() + " to a TicTacToe match. You have 30 seconds to accept the invite with /accept [name of player].");
         gameContainer.createGame(player, target);
         return true;
     }

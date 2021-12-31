@@ -3,6 +3,7 @@ package de.lunoro.tictactoe.commands;
 import de.lunoro.tictactoe.game.Game;
 import de.lunoro.tictactoe.game.GameContainer;
 import lombok.AllArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 public class AcceptCommand implements CommandExecutor {
 
     private final GameContainer gameContainer;
-    // TODO: 30.12.2021 add player arg
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -23,10 +23,17 @@ public class AcceptCommand implements CommandExecutor {
             return false;
         }
 
-        Game pendingInviteGame = gameContainer.getPendingInviteGame(player);
+        Player target = Bukkit.getPlayer(args[0]);
+
+        if (target == null) {
+            player.sendMessage("This player does not exist.");
+            return false;
+        }
+
+        Game pendingInviteGame = gameContainer.getPendingInviteGame(player, target);
 
         if (pendingInviteGame == null) {
-            player.sendMessage("You dont have a pending invite to a game.");
+            player.sendMessage("You dont have a pending invite from that player.");
             return false;
         }
 

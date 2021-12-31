@@ -3,7 +3,6 @@ package de.lunoro.tictactoe.game.tictactoe;
 import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
 import lombok.Getter;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class TicTacToeGame {
@@ -12,6 +11,8 @@ public class TicTacToeGame {
     private final Mark[][] gameBoard;
     @Getter
     private boolean isCompleted;
+    @Getter
+    private Mark winner;
     private final int size;
     private final HashMap<Integer, String> boardMapping;
 
@@ -19,6 +20,7 @@ public class TicTacToeGame {
         this.size = size;
         this.gameBoard = new Mark[size][size];
         this.boardMapping = new HashMap<>();
+        this.winner = null;
         isCompleted = false;
         setBoardMapping();
     }
@@ -39,10 +41,9 @@ public class TicTacToeGame {
     }
 
     public void markPos(int xPos, int yPos, Mark mark) {
-        System.out.println(Arrays.deepToString(gameBoard));
         if (gameBoard[xPos][yPos] == null) {
             gameBoard[xPos][yPos] = mark;
-            getWinnerIfHas(xPos, yPos, mark);
+            winner = getWinnerIfHas(xPos, yPos, mark);
         }
     }
 
@@ -59,7 +60,18 @@ public class TicTacToeGame {
         return gameBoard[Integer.parseInt(positions[0])][Integer.parseInt(positions[1])] == null;
     }
 
-    public Mark getWinnerIfHas(int xPos, int yPos, Mark mark) {
+    public boolean isDraw() {
+        for (Mark[] marks : gameBoard) {
+            for (Mark mark : marks) {
+                if (mark == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private Mark getWinnerIfHas(int xPos, int yPos, Mark mark) {
         for (int i = 0; i < size; i++) {
             if (gameBoard[xPos][i] != mark) {
                 break;

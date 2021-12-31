@@ -3,6 +3,7 @@ package de.lunoro.tictactoe.game;
 import de.lunoro.tictactoe.game.gameevents.GameEndEvent;
 import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
 import de.lunoro.tictactoe.game.gameinventory.GameInventory;
+import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -21,13 +22,16 @@ public class Game {
     private boolean isTurnOfPlayerOne;
     @Getter
     private GamePhase gamePhase;
+    @Getter
+    private final TicTacToeGame ticTacToe;
 
     public Game(Player playerOne, Player playerTwo) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.gamePhase = GamePhase.PENDING_INVITE;
         this.isTurnOfPlayerOne = true;
-        this.gameInventory = new GameInventory(new TicTacToeGame(3), this);
+        this.ticTacToe = new TicTacToeGame(3);
+        this.gameInventory = new GameInventory(ticTacToe, this);
     }
 
     public void startGame() {
@@ -47,6 +51,7 @@ public class Game {
         gamePhase = GamePhase.END;
         playerOne.closeInventory();
         playerTwo.closeInventory();
+        sendMessage("Game was interrupted.");
     }
 
     public void stopGame() {
@@ -54,8 +59,16 @@ public class Game {
         gamePhase = GamePhase.END;
         playerOne.closeInventory();
         playerTwo.closeInventory();
-        playerOne.sendMessage("The Game was won.");
-        playerTwo.sendMessage("The Game was won.");
+        if (ticTacToe.isDraw()) {
+            sendMessage("The game is a draw. GG");
+        } else {
+            sendMessage(getWinner().getName() + " has won.");
+        }
+    }
+
+    private void sendMessage(String message) {
+        playerOne.sendMessage(message);
+        playerTwo.sendMessage(message);
     }
 
     private void fireEndGameEvent() {
@@ -76,7 +89,22 @@ public class Game {
         return playerTwo;
     }
 
+    public Player getWinner() {
+        Mark winner = ticTacToe.getWinner();
+        if (ticTacToe.getWinner() == null) {
+            return null;
+        }
+        if (winner.equals(Mark.Y)) {
+            return playerTwo;
+        }
+        return playerOne;
+    }
+
     public boolean isInvitedPlayer(Player player) {
         return player.equals(playerTwo);
+    }
+
+    public boolean isOwner(Player player) {
+        return player.equals(playerOne);
     }
 }

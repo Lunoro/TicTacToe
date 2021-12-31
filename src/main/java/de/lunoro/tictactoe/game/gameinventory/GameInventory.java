@@ -1,6 +1,7 @@
 package de.lunoro.tictactoe.game.gameinventory;
 
 import de.lunoro.tictactoe.game.Game;
+import de.lunoro.tictactoe.game.gameevents.MarkEvent;
 import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
 import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
 import de.lunoro.tictactoe.itembuilder.ItemBuilder;
@@ -18,10 +19,8 @@ public class GameInventory {
 
     @Getter
     private final Inventory inventory;
-    @Getter
     private final TicTacToeGame ticTacToe;
     private final Game game;
-    private ItemStack turnItem;
 
     public GameInventory(TicTacToeGame ticTacToe, Game game) {
         this.ticTacToe = ticTacToe;
@@ -54,7 +53,7 @@ public class GameInventory {
 
         if (game.getPlayerOnTurn().equals(player)) {
             ticTacToe.markPos(slot, mark);
-            stopGameIfCompleted();
+            fireMarkEvent(slot, player, mark);
             updateWool(event.getInventory(), slot, mark);
             updateTurnItem();
         }
@@ -77,6 +76,7 @@ public class GameInventory {
     }
 
     private void updateTurnItem() {
+        ItemStack turnItem;
         if (game.isTurnOfPlayerOne()) {
             turnItem = new ItemBuilder(Material.NETHER_STAR).setName(ChatColor.RED + "Turn of " + game.getPlayerOnTurn().getName()).toItemStack();
         } else {
@@ -85,9 +85,8 @@ public class GameInventory {
         inventory.setItem(0, turnItem);
     }
 
-    private void stopGameIfCompleted() {
-        if (ticTacToe.isCompleted()) {
-            game.stopGame();
-        }
+    private void fireMarkEvent(int position, Player player, Mark mark) {
+        MarkEvent markEvent = new MarkEvent(position, player, mark, game);
+        Bukkit.getServer().getPluginManager().callEvent(markEvent);
     }
 }

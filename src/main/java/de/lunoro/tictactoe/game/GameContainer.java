@@ -48,9 +48,9 @@ public class GameContainer {
         return null;
     }
 
-    public Game getPendingInviteGame(Player player) {
+    public Game getPendingInviteGame(Player player, Player playerWhoSentInvite) {
         for (Game game : gameList) {
-            if (game.isInvitedPlayer(player)) {
+            if (game.isInvitedPlayer(player) && game.isOwner(playerWhoSentInvite)) {
                 return game;
             }
         }
