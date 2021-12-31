@@ -26,6 +26,10 @@ public class InventoryCloseListener implements Listener {
         Player player = (Player) event.getPlayer();
         Game game = gameContainer.getGame(player);
 
+        if (game == null) {
+            return;
+        }
+
         game.stopGameWithoutWinner();
     }
 }
