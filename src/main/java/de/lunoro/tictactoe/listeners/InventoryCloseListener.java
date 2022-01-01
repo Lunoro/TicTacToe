@@ -2,6 +2,7 @@ package de.lunoro.tictactoe.listeners;
 
 import de.lunoro.tictactoe.game.Game;
 import de.lunoro.tictactoe.game.GameContainer;
+import de.lunoro.tictactoe.game.GamePhase;
 import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,6 +27,10 @@ public class InventoryCloseListener implements Listener {
         Game game = gameContainer.getGame(player);
 
         if (game == null) {
+            return;
+        }
+
+        if (game.getGamePhase().equals(GamePhase.END)) {
             return;
         }
 
