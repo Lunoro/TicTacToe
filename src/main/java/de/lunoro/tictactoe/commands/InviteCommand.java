@@ -1,6 +1,8 @@
 package de.lunoro.tictactoe.commands;
 
+import de.lunoro.tictactoe.config.Config;
 import de.lunoro.tictactoe.game.GameContainer;
+import de.lunoro.tictactoe.messages.DefaultConfigRegistry;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class InviteCommand implements CommandExecutor {
 
     private final GameContainer gameContainer;
+    private final DefaultConfigRegistry defaultConfigRegistry;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -21,34 +24,38 @@ public class InviteCommand implements CommandExecutor {
         }
 
         if (!player.hasPermission("tictactoe.invite")) {
-            player.sendMessage("You dont have enough permissions to do that.");
+            player.sendMessage(defaultConfigRegistry.get("permissionError"));
             return false;
         }
 
         if (args.length != 1) {
-            player.sendMessage("Not enough arguments.");
+            player.sendMessage(defaultConfigRegistry.get("argumentError"));
             return false;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
 
         if (target == null) {
-            player.sendMessage("This player does not exist.");
+            player.sendMessage(defaultConfigRegistry.get("playerNotFoundError"));
             return false;
         }
 
         if (target.equals(player)) {
-            player.sendMessage("You cannot invite yourself.");
+            player.sendMessage(defaultConfigRegistry.get("selfInviteError"));
             return false;
         }
 
         if (gameContainer.getGame(player) != null) {
-            player.sendMessage("You cannot create a game while one is running.");
+            player.sendMessage(defaultConfigRegistry.get("createGameWhileOneIsRunningError"));
             return false;
         }
 
-        player.sendMessage("You've sent an invitation to " + target.getName() + ".");
-        target.sendMessage("You were invited from " + player.getName() + " to a TicTacToe match. You have 30 seconds to accept the invite with /accept [" + player.getName() + "].");
+        String invitationSentMessage = defaultConfigRegistry.get("invitationSentMessage").replace("%t", target.getName());
+        player.sendMessage(invitationSentMessage);
+        String invitationReceivedMessage = defaultConfigRegistry.get("invitationReceivedMessage")
+                .replace("%t", target.getName())
+                .replace("%p", player.getName());
+        target.sendMessage(invitationReceivedMessage);
         gameContainer.createGame(player, target);
         return true;
     }

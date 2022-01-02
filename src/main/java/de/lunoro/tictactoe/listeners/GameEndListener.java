@@ -8,7 +8,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -28,19 +27,20 @@ public class GameEndListener implements Listener {
         playerTwo.playSound(playerTwo.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
     }
 
-    public int closeInventory(Player player, Game game) {
+    public void closeInventory(Player player, Game game) {
         BukkitRunnable bukkitTask = new BukkitRunnable() {
             @Override
             public void run() {
                 if (player.getOpenInventory().getTopInventory().equals(game.getGameInventory().getInventory())) {
                     player.closeInventory();
                 }
+                game.closeSpectatorInventory(game.getGameInventory().getInventory());
                 if (gameContainer.getGame(player) != null) {
                     gameContainer.removeGame(game);
                 }
             }
         };
         bukkitTask.runTaskLater(plugin, 3 * 20);
-        return bukkitTask.getTaskId();
+        bukkitTask.getTaskId();
     }
 }

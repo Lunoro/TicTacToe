@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
-public class AcceptCommand implements CommandExecutor {
+public class SpectateCommand implements CommandExecutor {
 
     private final GameContainer gameContainer;
     private final DefaultConfigRegistry defaultConfigRegistry;
@@ -24,7 +24,7 @@ public class AcceptCommand implements CommandExecutor {
             return false;
         }
 
-        if (!player.hasPermission("tictactoe.accept")) {
+        if (!player.hasPermission("tictactoe.spectate")) {
             player.sendMessage(defaultConfigRegistry.get("permissionError"));
             return false;
         }
@@ -41,14 +41,20 @@ public class AcceptCommand implements CommandExecutor {
             return false;
         }
 
-        Game pendingInviteGame = gameContainer.getPendingInviteGame(player, target);
 
-        if (pendingInviteGame == null) {
-            player.sendMessage(defaultConfigRegistry.get("noPendingInviteError"));
+        Game game = gameContainer.getGame(target);
+
+        if (game == null) {
+            player.sendMessage(defaultConfigRegistry.get("gameNotFoundError"));
             return false;
         }
 
-        pendingInviteGame.acceptInvite(player);
+        String message = defaultConfigRegistry.get("spectatingStartedMessage")
+                .replace("%p1", game.getPlayerOne().getName())
+                .replace("%p2", game.getPlayerTwo().getName());
+        player.sendMessage(message);
+        player.openInventory(game.getGameInventory().getInventory());
+        game.addSpectator(player);
         return true;
     }
 }
