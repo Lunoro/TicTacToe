@@ -6,6 +6,7 @@ import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
 import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
 import de.lunoro.tictactoe.itembuilder.ItemBuilder;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,7 +27,7 @@ public class GameInventory {
     public GameInventory(TicTacToeGame ticTacToe, Game game) {
         this.ticTacToe = ticTacToe;
         this.game = game;
-        this.inventory = Bukkit.createInventory(null, InventoryType.WORKBENCH);
+        this.inventory = Bukkit.createInventory(null, InventoryType.WORKBENCH, Component.text("TicTacToe"));
         setupInventory();
     }
 

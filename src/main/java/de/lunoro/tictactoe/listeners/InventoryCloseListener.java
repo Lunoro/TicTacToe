@@ -30,6 +30,11 @@ public class InventoryCloseListener implements Listener {
             return;
         }
 
+        if (game.isSpectator(player)) {
+            game.removeSpectator(player);
+            return;
+        }
+
         if (game.getGamePhase().equals(GamePhase.END)) {
             return;
         }

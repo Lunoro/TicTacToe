@@ -27,6 +27,11 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
+        if (game.isSpectator(player)) {
+            event.setCancelled(true);
+            return;
+        }
+
         gameInventory.clickBlock(event, player);
         event.setCancelled(true);
     }

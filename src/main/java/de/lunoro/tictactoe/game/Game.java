@@ -1,16 +1,20 @@
 package de.lunoro.tictactoe.game;
 
+import de.lunoro.tictactoe.config.Config;
 import de.lunoro.tictactoe.game.gameevents.GameEndEvent;
 import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
 import de.lunoro.tictactoe.game.gameinventory.GameInventory;
 import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.inventory.Inventory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Getter
@@ -23,14 +27,19 @@ public class Game {
     private boolean isTurnOfPlayerOne;
     private GamePhase gamePhase;
     private final TicTacToeGame ticTacToe;
+    @Getter(value = AccessLevel.NONE)
+    private final List<Player> spectatorList;
+    private final Config messagesConfig;
 
-    public Game(Player playerOne, Player playerTwo) {
+    public Game(Player playerOne, Player playerTwo, Config messagesConfig) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.gamePhase = GamePhase.PENDING_INVITE;
         this.isTurnOfPlayerOne = randomizeStart();
         this.ticTacToe = new TicTacToeGame(3);
         this.gameInventory = new GameInventory(ticTacToe, this);
+        this.spectatorList = new ArrayList<>();
+        this.messagesConfig = messagesConfig;
     }
 
     private boolean randomizeStart() {
@@ -54,22 +63,26 @@ public class Game {
     public void stopGameWithoutWinner() {
         fireEndGameEvent();
         gamePhase = GamePhase.END;
-        sendMessage("Game was interrupted.");
+        sendMessage(messagesConfig.getString(""));
     }
 
     public void stopGame() {
         fireEndGameEvent();
         gamePhase = GamePhase.END;
         if (ticTacToe.isDraw()) {
-            sendMessage("The game is a draw. GG");
+            sendMessage(messagesConfig.getString("gameEndDraw"));
         } else {
-            sendMessage(getWinner().getName() + " has won.");
+            sendMessage(messagesConfig.getString("gameEnd").replace("%w", getWinner().getName()));
         }
     }
 
     private void sendMessage(String message) {
         playerOne.sendMessage(message);
         playerTwo.sendMessage(message);
+
+        for (Player player : spectatorList) {
+            player.sendMessage(message);
+        }
     }
 
     private void fireEndGameEvent() {
@@ -104,6 +117,26 @@ public class Game {
             return playerTwo;
         }
         return playerOne;
+    }
+
+    public void addSpectator(Player player) {
+        spectatorList.add(player);
+    }
+
+    public void removeSpectator(Player player) {
+        spectatorList.remove(player);
+    }
+
+    public void closeSpectatorInventory(Inventory inventory) {
+        for (Player player : spectatorList) {
+            if (inventory.equals(gameInventory.getInventory())) {
+                player.closeInventory();
+            }
+        }
+    }
+
+    public boolean isSpectator(Player player) {
+        return spectatorList.contains(player);
     }
 
     public boolean isInvitedPlayer(Player player) {

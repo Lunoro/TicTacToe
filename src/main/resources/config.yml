@@ -1,0 +1,19 @@
+#
+#  TicTacToe plugin by Lunoro.
+#
+
+permissionError: "You dont have enough permissions to do that."
+argumentError: "Not enough arguments."
+playerNotFoundError: "This player does not exist."
+noPendingInviteError: "You dont have a pending invite from that player."
+selfInviteError: "You cannot invite yourself."
+createGameWhileOneIsRunningError: "You cannot create a game while one is running."
+gameNotFoundError: "This player is in no active game."
+gameInterruptedError: "The game was interrupted."
+
+gameEndDraw: "The game is a draw. GG"
+gameEnd: "%w has won."
+
+invitationSendMessage: "You've sent an invitation to %t."
+invitationReceivedMessag: "You were invited from %p to a TicTacToe match. You have 30 seconds to accept the invite with /accept [%t]."
+spectatingStartedMessage: "You're watching the game of %p1 and %p2."

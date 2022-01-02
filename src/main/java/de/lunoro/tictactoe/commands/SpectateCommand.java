@@ -12,10 +12,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
-public class AcceptCommand implements CommandExecutor {
+public class SpectateCommand implements CommandExecutor {
 
     private final GameContainer gameContainer;
-    private final Config messages;
+    private final Config messagesConfig;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -23,31 +23,37 @@ public class AcceptCommand implements CommandExecutor {
             return false;
         }
 
-        if (!player.hasPermission("tictactoe.accept")) {
-            player.sendMessage(messages.getString("permissionError"));
+        if (!player.hasPermission("tictactoe.spectate")) {
+            player.sendMessage(messagesConfig.getString("permissionError"));
             return false;
         }
 
         if (args.length != 1) {
-            player.sendMessage(messages.getString("argumentError"));
+            player.sendMessage(messagesConfig.getString("argumentError"));
             return false;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
 
         if (target == null) {
-            player.sendMessage(messages.getString("playerNotFoundError"));
+            player.sendMessage(messagesConfig.getString("playerNotFoundError"));
             return false;
         }
 
-        Game pendingInviteGame = gameContainer.getPendingInviteGame(player, target);
 
-        if (pendingInviteGame == null) {
-            player.sendMessage(messages.getString("noPendingInviteError"));
+        Game game = gameContainer.getGame(target);
+
+        if (game == null) {
+            player.sendMessage(messagesConfig.getString("gameNotFoundError"));
             return false;
         }
 
-        pendingInviteGame.acceptInvite(player);
+        String message = messagesConfig.getString("spectatingStartedMessage")
+                .replace("%p1", game.getPlayerOne().getName())
+                .replace("%p2", game.getPlayerTwo().getName());
+        player.sendMessage(message);
+        player.openInventory(game.getGameInventory().getInventory());
+        game.addSpectator(player);
         return true;
     }
 }

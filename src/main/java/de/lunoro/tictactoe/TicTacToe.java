@@ -2,6 +2,9 @@ package de.lunoro.tictactoe;
 
 import de.lunoro.tictactoe.commands.AcceptCommand;
 import de.lunoro.tictactoe.commands.InviteCommand;
+import de.lunoro.tictactoe.commands.SpectateCommand;
+import de.lunoro.tictactoe.config.Config;
+import de.lunoro.tictactoe.config.ConfigContainer;
 import de.lunoro.tictactoe.game.GameContainer;
 import de.lunoro.tictactoe.listeners.GameEndListener;
 import de.lunoro.tictactoe.listeners.InventoryClickListener;
@@ -12,7 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TicTacToe extends JavaPlugin {
 
+    private ConfigContainer configContainer;
     private GameContainer gameContainer;
+    private Config config;
 
     @Override
     public void onLoad() {
@@ -21,7 +26,9 @@ public final class TicTacToe extends JavaPlugin {
 
     private void init() {
         saveResource("config.yml", false);
-        gameContainer = new GameContainer(this);
+        configContainer = new ConfigContainer(this);
+        config = configContainer.getFile("config");
+        gameContainer = new GameContainer(this, config);
     }
 
     @Override
@@ -31,8 +38,9 @@ public final class TicTacToe extends JavaPlugin {
     }
 
     private void registerCommands() {
-        Bukkit.getPluginCommand("invite").setExecutor(new InviteCommand(gameContainer));
-        Bukkit.getPluginCommand("accept").setExecutor(new AcceptCommand(gameContainer));
+        Bukkit.getPluginCommand("invite").setExecutor(new InviteCommand(gameContainer, config));
+        Bukkit.getPluginCommand("accept").setExecutor(new AcceptCommand(gameContainer, config));
+        Bukkit.getPluginCommand("spectate").setExecutor(new SpectateCommand(gameContainer, config));
     }
 
     private void registerListeners() {
