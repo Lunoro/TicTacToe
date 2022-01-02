@@ -6,6 +6,7 @@ import de.lunoro.tictactoe.game.gameevents.MarkEvent;
 import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
 import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
 import de.lunoro.tictactoe.itembuilder.ItemBuilder;
+import de.lunoro.tictactoe.messages.DefaultConfigRegistry;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -23,39 +24,21 @@ public class GameInventory {
     private final Inventory inventory;
     private final TicTacToeGame ticTacToe;
     private final Game game;
-    private final Config config;
-    private String playerOneMaterial;
-    private String playerTwoMaterial;
-    private String playerOneItemName;
-    private String playerTwoItemName;
-    private String turnMaterial;
-    private String turnItemNamePlayerOne;
-    private String turnItemNamePlayerTwo;
+    private final DefaultConfigRegistry defaultConfigRegistry;
+
 
     public GameInventory(TicTacToeGame ticTacToe, Game game) {
         this.ticTacToe = ticTacToe;
         this.game = game;
-        this.config = game.getConfig();
-        this.inventory = Bukkit.createInventory(null, InventoryType.WORKBENCH, Component.text(config.getString("inventoryName")));
+        this.defaultConfigRegistry = game.getDefaultConfigRegistry();
+        this.inventory = Bukkit.createInventory(null, InventoryType.WORKBENCH, Component.text(defaultConfigRegistry.get("inventoryName")));
         setupInventory();
-        loadMessages();
-    }
-
-    private void loadMessages() {
-        playerOneMaterial = config.getString("playerOneItem");
-        playerTwoMaterial = config.getString("playerTwoItem");
-        playerOneItemName = config.getString("playerOneItemName");
-        playerTwoItemName = config.getString("playerTwoItemName");
-
-        turnMaterial = config.getString("turnItem");
-        turnItemNamePlayerOne = config.getString("turnItemNamePlayerOne").replace("%p1", game.getPlayerOne().getName());
-        turnItemNamePlayerTwo = config.getString("turnItemNamePlayerTwo").replace("%p2", game.getPlayerTwo().getName());
     }
 
     private void setupInventory() {
         int i = 1;
-        String material = config.getString("normalItem");
-        String itemName = config.getString("normalItemName");
+        String material = defaultConfigRegistry.get("normalItem");
+        String itemName = defaultConfigRegistry.get("normalItemName");
         for (Mark[] marks : ticTacToe.getGameBoard()) {
             for (Mark mark : marks) {
                 inventory.setItem(i, new ItemBuilder(Material.valueOf(material)).setName(itemName).toItemStack());
@@ -88,6 +71,12 @@ public class GameInventory {
     }
 
     private void updateWool(Inventory inventory, int slot, Mark mark) {
+        String playerOneMaterial = defaultConfigRegistry.get("playerOneItem");
+        String playerOneItemName = defaultConfigRegistry.get("playerOneItemName");
+
+        String playerTwoMaterial = defaultConfigRegistry.get("playerTwoItem");
+        String playerTwoItemName = defaultConfigRegistry.get("playerTwoItemName");
+
         if (mark.equals(Mark.X)) {
             inventory.setItem(slot,
                     new ItemBuilder(Material.valueOf(playerOneMaterial))
@@ -105,6 +94,10 @@ public class GameInventory {
 
     private void updateTurnItem() {
         ItemStack turnItem;
+        String turnMaterial = defaultConfigRegistry.get("turnItem");
+        String turnItemNamePlayerOne = defaultConfigRegistry.get("turnItemNamePlayerOne").replace("%p1", game.getPlayerOne().getName());
+        String turnItemNamePlayerTwo = defaultConfigRegistry.get("turnItemNamePlayerTwo").replace("%p2", game.getPlayerTwo().getName());
+
         if (game.isTurnOfPlayerOne()) {
             turnItem = new ItemBuilder(Material.valueOf(turnMaterial)).setName(turnItemNamePlayerOne).toItemStack();
         } else {

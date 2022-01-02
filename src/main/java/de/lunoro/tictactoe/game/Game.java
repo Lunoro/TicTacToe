@@ -5,6 +5,7 @@ import de.lunoro.tictactoe.game.gameevents.GameEndEvent;
 import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
 import de.lunoro.tictactoe.game.gameinventory.GameInventory;
 import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
+import de.lunoro.tictactoe.messages.DefaultConfigRegistry;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,22 +23,22 @@ public class Game {
 
     private final Player playerOne;
     private final Player playerTwo;
-    private final GameInventory gameInventory;
     @Setter
     private boolean isTurnOfPlayerOne;
     private GamePhase gamePhase;
     private final TicTacToeGame ticTacToe;
+    private final DefaultConfigRegistry defaultConfigRegistry;
+    private final GameInventory gameInventory;
     @Getter(value = AccessLevel.NONE)
     private final List<Player> spectatorList;
-    private final Config config;
 
-    public Game(Player playerOne, Player playerTwo, Config messagesConfig) {
+    public Game(Player playerOne, Player playerTwo, DefaultConfigRegistry defaultConfigRegistry) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.gamePhase = GamePhase.PENDING_INVITE;
         this.isTurnOfPlayerOne = randomizeStart();
         this.ticTacToe = new TicTacToeGame(3);
-        this.config = messagesConfig;
+        this.defaultConfigRegistry = defaultConfigRegistry;
         this.gameInventory = new GameInventory(ticTacToe, this);
         this.spectatorList = new ArrayList<>();
     }
@@ -63,16 +64,16 @@ public class Game {
     public void stopGameWithoutWinner() {
         fireEndGameEvent();
         gamePhase = GamePhase.END;
-        sendMessage(config.getString(""));
+        sendMessage(defaultConfigRegistry.get("gameInterruptedError"));
     }
 
     public void stopGame() {
         fireEndGameEvent();
         gamePhase = GamePhase.END;
         if (ticTacToe.isDraw()) {
-            sendMessage(config.getString("gameEndDraw"));
+            sendMessage(defaultConfigRegistry.get("gameEndDraw"));
         } else {
-            sendMessage(config.getString("gameEnd").replace("%w", getWinner().getName()));
+            sendMessage(defaultConfigRegistry.get("gameEnd").replace("%w", getWinner().getName()));
         }
     }
 
