@@ -29,7 +29,7 @@ public class Game {
     private final TicTacToeGame ticTacToe;
     @Getter(value = AccessLevel.NONE)
     private final List<Player> spectatorList;
-    private final Config messagesConfig;
+    private final Config config;
 
     public Game(Player playerOne, Player playerTwo, Config messagesConfig) {
         this.playerOne = playerOne;
@@ -37,9 +37,9 @@ public class Game {
         this.gamePhase = GamePhase.PENDING_INVITE;
         this.isTurnOfPlayerOne = randomizeStart();
         this.ticTacToe = new TicTacToeGame(3);
+        this.config = messagesConfig;
         this.gameInventory = new GameInventory(ticTacToe, this);
         this.spectatorList = new ArrayList<>();
-        this.messagesConfig = messagesConfig;
     }
 
     private boolean randomizeStart() {
@@ -63,16 +63,16 @@ public class Game {
     public void stopGameWithoutWinner() {
         fireEndGameEvent();
         gamePhase = GamePhase.END;
-        sendMessage(messagesConfig.getString(""));
+        sendMessage(config.getString(""));
     }
 
     public void stopGame() {
         fireEndGameEvent();
         gamePhase = GamePhase.END;
         if (ticTacToe.isDraw()) {
-            sendMessage(messagesConfig.getString("gameEndDraw"));
+            sendMessage(config.getString("gameEndDraw"));
         } else {
-            sendMessage(messagesConfig.getString("gameEnd").replace("%w", getWinner().getName()));
+            sendMessage(config.getString("gameEnd").replace("%w", getWinner().getName()));
         }
     }
 

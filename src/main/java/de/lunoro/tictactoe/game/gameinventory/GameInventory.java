@@ -1,5 +1,6 @@
 package de.lunoro.tictactoe.game.gameinventory;
 
+import de.lunoro.tictactoe.config.Config;
 import de.lunoro.tictactoe.game.Game;
 import de.lunoro.tictactoe.game.gameevents.MarkEvent;
 import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
@@ -8,7 +9,6 @@ import de.lunoro.tictactoe.itembuilder.ItemBuilder;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -23,19 +23,42 @@ public class GameInventory {
     private final Inventory inventory;
     private final TicTacToeGame ticTacToe;
     private final Game game;
+    private final Config config;
+    private String playerOneMaterial;
+    private String playerTwoMaterial;
+    private String playerOneItemName;
+    private String playerTwoItemName;
+    private String turnMaterial;
+    private String turnItemNamePlayerOne;
+    private String turnItemNamePlayerTwo;
 
     public GameInventory(TicTacToeGame ticTacToe, Game game) {
         this.ticTacToe = ticTacToe;
         this.game = game;
-        this.inventory = Bukkit.createInventory(null, InventoryType.WORKBENCH, Component.text("TicTacToe"));
+        this.config = game.getConfig();
+        this.inventory = Bukkit.createInventory(null, InventoryType.WORKBENCH, Component.text(config.getString("inventoryName")));
         setupInventory();
+        loadMessages();
+    }
+
+    private void loadMessages() {
+        playerOneMaterial = config.getString("playerOneItem");
+        playerTwoMaterial = config.getString("playerTwoItem");
+        playerOneItemName = config.getString("playerOneItemName");
+        playerTwoItemName = config.getString("playerTwoItemName");
+
+        turnMaterial = config.getString("turnItem");
+        turnItemNamePlayerOne = config.getString("turnItemNamePlayerOne").replace("%p1", game.getPlayerOne().getName());
+        turnItemNamePlayerTwo = config.getString("turnItemNamePlayerTwo").replace("%p2", game.getPlayerTwo().getName());
     }
 
     private void setupInventory() {
         int i = 1;
+        String material = config.getString("normalItem");
+        String itemName = config.getString("normalItemName");
         for (Mark[] marks : ticTacToe.getGameBoard()) {
             for (Mark mark : marks) {
-                inventory.setItem(i, new ItemBuilder(Material.WHITE_WOOL).setName("Click me").toItemStack());
+                inventory.setItem(i, new ItemBuilder(Material.valueOf(material)).setName(itemName).toItemStack());
                 i++;
             }
         }
@@ -67,14 +90,14 @@ public class GameInventory {
     private void updateWool(Inventory inventory, int slot, Mark mark) {
         if (mark.equals(Mark.X)) {
             inventory.setItem(slot,
-                    new ItemBuilder(Material.RED_WOOL)
-                            .setName(ChatColor.RED + "Im red :I")
+                    new ItemBuilder(Material.valueOf(playerOneMaterial))
+                            .setName(playerOneItemName)
                             .toItemStack());
             game.setTurnOfPlayerOne(false);
         } else {
             inventory.setItem(slot,
-                    new ItemBuilder(Material.BLUE_WOOL)
-                            .setName(ChatColor.BLUE + "Im blue :I")
+                    new ItemBuilder(Material.valueOf(playerTwoMaterial))
+                            .setName(playerTwoItemName)
                             .toItemStack());
             game.setTurnOfPlayerOne(true);
         }
@@ -83,9 +106,9 @@ public class GameInventory {
     private void updateTurnItem() {
         ItemStack turnItem;
         if (game.isTurnOfPlayerOne()) {
-            turnItem = new ItemBuilder(Material.NETHER_STAR).setName(ChatColor.RED + game.getPlayerOnTurn().getName() + "'s turn").toItemStack();
+            turnItem = new ItemBuilder(Material.valueOf(turnMaterial)).setName(turnItemNamePlayerOne).toItemStack();
         } else {
-            turnItem = new ItemBuilder(Material.NETHER_STAR).setName(ChatColor.BLUE + game.getPlayerOnTurn().getName() + "'s turn").toItemStack();
+            turnItem = new ItemBuilder(Material.valueOf(turnMaterial)).setName(turnItemNamePlayerTwo).toItemStack();
         }
         inventory.setItem(0, turnItem);
     }
