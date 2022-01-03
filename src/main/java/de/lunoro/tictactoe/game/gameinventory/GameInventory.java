@@ -1,12 +1,11 @@
 package de.lunoro.tictactoe.game.gameinventory;
 
-import de.lunoro.tictactoe.config.Config;
 import de.lunoro.tictactoe.game.Game;
 import de.lunoro.tictactoe.game.gameevents.MarkEvent;
 import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
 import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
 import de.lunoro.tictactoe.itembuilder.ItemBuilder;
-import de.lunoro.tictactoe.messages.DefaultConfigRegistry;
+import de.lunoro.tictactoe.defaultconfig.DefaultConfigRegistry;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;

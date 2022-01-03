@@ -1,4 +1,4 @@
-package de.lunoro.tictactoe.messages;
+package de.lunoro.tictactoe.defaultconfig;
 
 import de.lunoro.tictactoe.config.Config;
 import lombok.AllArgsConstructor;

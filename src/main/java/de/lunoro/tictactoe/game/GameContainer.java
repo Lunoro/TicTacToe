@@ -1,6 +1,6 @@
 package de.lunoro.tictactoe.game;
 
-import de.lunoro.tictactoe.messages.DefaultConfigRegistry;
+import de.lunoro.tictactoe.defaultconfig.DefaultConfigRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;

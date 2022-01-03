@@ -1,8 +1,7 @@
 package de.lunoro.tictactoe.commands;
 
-import de.lunoro.tictactoe.config.Config;
 import de.lunoro.tictactoe.game.GameContainer;
-import de.lunoro.tictactoe.messages.DefaultConfigRegistry;
+import de.lunoro.tictactoe.defaultconfig.DefaultConfigRegistry;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

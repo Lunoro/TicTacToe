@@ -1,11 +1,10 @@
 package de.lunoro.tictactoe.game;
 
-import de.lunoro.tictactoe.config.Config;
 import de.lunoro.tictactoe.game.gameevents.GameEndEvent;
 import de.lunoro.tictactoe.game.tictactoe.TicTacToeGame;
 import de.lunoro.tictactoe.game.gameinventory.GameInventory;
 import de.lunoro.tictactoe.game.tictactoe.mark.Mark;
-import de.lunoro.tictactoe.messages.DefaultConfigRegistry;
+import de.lunoro.tictactoe.defaultconfig.DefaultConfigRegistry;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

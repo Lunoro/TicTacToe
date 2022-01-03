@@ -10,7 +10,7 @@ import de.lunoro.tictactoe.listeners.GameEndListener;
 import de.lunoro.tictactoe.listeners.InventoryClickListener;
 import de.lunoro.tictactoe.listeners.InventoryCloseListener;
 import de.lunoro.tictactoe.listeners.MarkListener;
-import de.lunoro.tictactoe.messages.DefaultConfigRegistry;
+import de.lunoro.tictactoe.defaultconfig.DefaultConfigRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
