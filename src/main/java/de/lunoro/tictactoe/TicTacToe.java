@@ -16,10 +16,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TicTacToe extends JavaPlugin {
 
-    private ConfigContainer configContainer;
     private DefaultConfigRegistry defaultConfigRegistry;
     private GameContainer gameContainer;
-    private Config config;
 
     @Override
     public void onLoad() {
@@ -28,10 +26,10 @@ public final class TicTacToe extends JavaPlugin {
 
     private void init() {
         saveResource("config.yml", false);
-        configContainer = new ConfigContainer(this);
-        config = configContainer.getFile("config");
+        ConfigContainer configContainer = new ConfigContainer(this);
+        Config config = configContainer.getFile("config");
         defaultConfigRegistry = new DefaultConfigRegistry(config);
-        gameContainer = new GameContainer(this, config);
+        gameContainer = new GameContainer(this, defaultConfigRegistry);
     }
 
     @Override

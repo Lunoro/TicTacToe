@@ -1,6 +1,6 @@
 package de.lunoro.tictactoe.game;
 
-import de.lunoro.tictactoe.config.Config;
+import de.lunoro.tictactoe.messages.DefaultConfigRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -12,16 +12,16 @@ public class GameContainer {
 
     private final List<Game> gameList;
     private final Plugin plugin;
-    private final Config messagesConfig;
+    private final DefaultConfigRegistry defaultConfigRegistry;
 
-    public GameContainer(Plugin plugin, Config messagesConfig) {
+    public GameContainer(Plugin plugin, DefaultConfigRegistry defaultConfigRegistry) {
         gameList = new ArrayList<>();
         this.plugin = plugin;
-        this.messagesConfig = messagesConfig;
+        this.defaultConfigRegistry = defaultConfigRegistry;
     }
 
     public void createGame(Player playerOne, Player playerTwo) {
-        final Game game = new Game(playerOne, playerTwo, messagesConfig);
+        final Game game = new Game(playerOne, playerTwo, defaultConfigRegistry);
         addGame(game);
         deleteGameIfInvitationTimerIsExpired(game);
     }
